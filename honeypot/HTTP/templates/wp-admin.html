@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Log In ‹ WordPress</title>
+    <meta name="viewport" content="width=device-width">
+
+    <style>
+        body {
+            background: #f0f0f1;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen;
+            margin: 0;
+            padding: 0;
+        }
+
+        #login {
+            width: 360px;
+            padding: 8% 0 0;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 a {
+            background-image: url("https://imgs.search.brave.com/NmNdi_ZBgN3eYcasKtM9csy5yAPn8r1R6p4zO4GAMjo/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/ZnJlZXBuZ2xvZ29z/LmNvbS91cGxvYWRz/L3dvcmRwcmVzcy1s/b2dvLXBuZy93b3Jk/cHJlc3MtbG9nby1w/bmctdHJhbnNwYXJl/bnQtNC5wbmc");
+            background-size: contain;
+            width: 100%;
+            height: 230px;
+            display: block;
+            text-indent: -9999px;
+        }
+
+        form {
+            background: #fff;
+            padding: 10px 30px 10px 10px;
+            box-shadow: 0 1px 30px rgba(0,0,0,.13);
+            border-radius: 8px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #3c434a;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin: 4px 0 10px;
+            font-size: 16px;
+        }
+
+        .button-primary {
+            background: #2271b1;
+            border: none;
+            color: white;
+            padding: 8px 14px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .forgetmenot {
+            float: left;
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        #backtoblog {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        #backtoblog a {
+            color: #50575e;
+            text-decoration: none;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div id="login">
+        <h1><a href="#">WordPress</a></h1>
+        
+        {% if login_error %}
+        <div id="login_error" style="background:#f8d7da;padding:10px;border:1px solid #c00;">
+            Invalid username or password.
+        </div>
+        {% endif %}
+        
+        <form method="post" action="/wp-login.php">
+            <p>
+                <label>
+                    Username or Email Address
+                    <input type="text" name="username" autocomplete="username">
+                </label>
+            </p>
+            
+            <p>
+                <label>
+                    Password
+                    <input type="password" name="password" autocomplete="current-password">
+                </label>
+            </p>
+            
+            
+            <p class="forgetmenot">
+                <label>
+                    <input type="checkbox" name="rememberme">
+                    Remember Me
+                </label>
+            </p>
+            
+            <p>
+                <input type="submit" class="button-primary" value="Log In">
+            </p>
+            
+            <div class="clear"></div>
+        </form>
+
+        <p id="backtoblog">
+            <a href="#">← Go to site</a>
+        </p>
+    </div>
+</body>
+</html>

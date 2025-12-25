@@ -1,49 +1,66 @@
+"""
+A custom Paramiko server interface that logs authentication attempts.
 
+This class accepts any password for any username and logs the credentials.
+It only permits 'session' channels (i.e., shells) and denies other request
+types like port forwarding.
+"""
 import logging
 import paramiko
 
-# --- SSH server implementation used by Paramiko ---
-class Server(paramiko.ServerInterface):
 
-    # Called when the Server object is created
-    # Stores client metadata (not required for SSH itself)
-    def __init__(self, client_ip, client_port):
+class SSHServer(paramiko.ServerInterface):
+
+    def __init__(self, client_ip: str, client_port: int, logger: logging.Logger):
         self.client_ip = client_ip
         self.client_port = client_port
-        self.input_username = None
-        self.input_password = None
+        self.auth_logger = logger
 
-    # Called when the client tries to authenticate using a password
-    # Returning AUTH_SUCCESSFUL means "accept any username/password"
-    def check_auth_password(self, username, password):
-        self.input_username = username
-        self.input_password = password
-        
-        logging.getLogger("SSHCreds").info(
-            f"Address={self.client_ip}:{self.client_port} USER={username} PASS={password}"
+    def check_auth_password(self, username: str, password: str) -> int:
+        """
+        Called when a client attempts to authenticate with a password.
+
+        This method unconditionally accepts the authentication and logs the
+        credentials used.
+        """
+        self.auth_logger.info(
+            f"Login attempt from {self.client_ip}:{self.client_port} - "
+            f"Username: '{username}', Password: '{password}'"
         )
-        
         return paramiko.AUTH_SUCCESSFUL
 
-    # Called when the client requests a new channel
-    # SSH supports many channel types; we only allow "session"
-    # Returning OPEN_SUCCEEDED allows the channel to be created
-    def check_channel_request(self, kind: str, chanid: str) -> int:
+    def check_channel_request(self, kind: str, chanid: int) -> int:
+        """
+        Called when the client requests a channel.
+        Only 'session' channels are permitted.
+        """
         if kind == "session":
             return paramiko.OPEN_SUCCEEDED
-
-        # Reject all other channel types (port forwarding, exec, subsystems)
         return paramiko.OPEN_FAILED_ADMINISTRATIVELY_PROHIBITED
 
-    # Tells the client which authentication methods are supported
-    # In this case, only password authentication is allowed
-    def get_allowed_auths(self, username):
+    def get_allowed_auths(self, username: str) -> str:
+        """
+        Specifies the allowed authentication methods.
+        """
         return "password"
 
-    # Called when the client requests an interactive shell
-    # Returning True allows the client to start typing commands
-    def check_channel_shell_request(self, channel):
+    def check_channel_shell_request(self, channel: paramiko.Channel) -> bool:
+        """
+        Called when the client requests an interactive shell.
+        """
         return True
 
-    def check_channel_pty_request(self, channel, term, width, height, pixelwidth, pixelheight, modes):
-        return True  # Accept PTY request
+    def check_channel_pty_request(
+        self,
+        channel: paramiko.Channel,
+        term: bytes,
+        width: int,
+        height: int,
+        pixelwidth: int,
+        pixelheight: int,
+        modes: bytes,
+    ) -> bool:
+        """
+        Called when the client requests a pseudo-terminal.
+        """
+        return True
