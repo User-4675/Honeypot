@@ -31,8 +31,8 @@ Ensure you have Python 3.6+ installed on your system.
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/honeypot.git
-    cd honeypot
+    git clone https://github.com/User-4675/Honeypot.git
+    cd Honeypot
     ```
 
 2.  **Create and activate a virtual environment (recommended):**
@@ -52,13 +52,13 @@ The honeypot is controlled via command-line arguments. You must specify the serv
 
 **To run the SSH honeypot:**
 ```bash
-python main.py -s -a 0.0.0.0 -p 2222
+python3 main.py -s -a 0.0.0.0 -p 2222
 ```
 *Note: Running on ports below 1024 (like the default SSH port 22) requires root privileges.*
 
 **To run the HTTP honeypot:**
 ```bash
-python main.py -w -a 0.0.0.0 -p 8080
+python3 main.py -w -a 0.0.0.0 -p 8080
 ```
 
 ## Auditing and Logs
